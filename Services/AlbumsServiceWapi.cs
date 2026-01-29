@@ -41,13 +41,21 @@ public class AlbumsServiceWapi : IAlbumsService
         //Get the resonse data
         string s = await response.Content.ReadAsStringAsync();
         var resp = JsonConvert.DeserializeObject<ResponsePageDto<IAlbum>>(s, _jsonSettings);
+        
         return resp;
     }
     public async Task<ResponseItemDto<IAlbum>> ReadAlbumAsync(Guid id, bool flat)
     {
         string uri = $"albums/readitem?id={id}&flat={flat}";
 
-        throw new NotImplementedException();
+        HttpResponseMessage response = await _httpClient.GetAsync(uri);
+        
+        await response.EnsureSuccessStatusMessage();
+
+        string s = await response.Content.ReadAsStringAsync();
+        var resp = JsonConvert.DeserializeObject<ResponseItemDto<IAlbum>>(s, _jsonSettings);
+
+        return resp;
     }
     public async Task<ResponseItemDto<IAlbum>> DeleteAlbumAsync(Guid id)
     {

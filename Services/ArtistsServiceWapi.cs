@@ -41,13 +41,23 @@ public class ArtistsServiceWapi : IArtistsService
         //Get the resonse data
         string s = await response.Content.ReadAsStringAsync();
         var resp = JsonConvert.DeserializeObject<ResponsePageDto<IArtist>>(s, _jsonSettings);
+        
         return resp;
     }
     public async Task<ResponseItemDto<IArtist>> ReadArtistAsync(Guid id, bool flat)
     {
         string uri = $"artists/readitem?id={id}&flat={flat}";
 
-        throw new NotImplementedException();
+         HttpResponseMessage response = await _httpClient.GetAsync(uri);
+
+        //Throw an exception if the response is not successful
+        await response.EnsureSuccessStatusMessage();
+
+        //Get the resonse data
+        string s = await response.Content.ReadAsStringAsync();
+        var resp = JsonConvert.DeserializeObject<ResponseItemDto<IArtist>>(s, _jsonSettings);
+
+        return resp;
     }
     public async Task<ResponseItemDto<IArtist>> DeleteArtistAsync(Guid id)
     {
